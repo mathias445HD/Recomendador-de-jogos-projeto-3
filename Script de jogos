@@ -1,0 +1,160 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Recomendador {
+
+    private List<Jogo> jogos;
+
+    public Recomendador() {
+        jogos = new ArrayList<>();
+        carregarJogos();
+    }
+
+    // Carregar alguns jogos para recomendação
+    private void carregarJogos() {
+        jogos.add(new Jogo("The Witcher 3", "RPG", "Aventura épica com elementos de fantasia."));
+        jogos.add(new Jogo("FIFA 24", "Esporte", "Simulador de futebol altamente realista."));
+        jogos.add(new Jogo("Minecraft", "Aventura", "Jogo de construção e exploração no estilo sandbox."));
+        jogos.add(new Jogo("Counter-Strike", "Tiro", "Jogo de tiro em primeira pessoa focado em equipes."));
+        jogos.add(new Jogo("The Sims 4", "Simulação", "Simulação de vida em um ambiente virtual."));
+        jogos.add(new Jogo("Valorant", "Tiro", "Jogo de tiro tático com heróis e habilidades especiais."));
+    }
+
+    // Recomendação com base na categoria
+    public void recomendarJogos(String categoria) {
+        System.out.println("\nRecomendações de jogos para a categoria: " + categoria + "\n");
+        boolean encontrou = false;
+        for (Jogo jogo : jogos) {
+            if (jogo.getCategoria().equalsIgnoreCase(categoria)) {
+                System.out.println(jogo);
+                encontrou = true;
+            }
+        }
+        if (!encontrou) {
+            System.out.println("Não encontramos jogos para essa categoria.");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Recomendador recomendador = new Recomendador();
+
+        // Interação com o usuário
+        System.out.println("Bem-vindo ao Recomendador de Jogos!");
+        System.out.print("Digite a categoria de jogo que você deseja (ex: RPG, Esporte, Aventura, etc.): ");
+        String categoria = scanner.nextLine();
+
+        recomendador.recomendarJogos(categoria);
+
+        scanner.close();
+    }
+}
+Digite a categoria de jogo que você deseja (ex: RPG, Esporte, Aventura, etc.): RPG
+Recomendações de jogos para a categoria: RPG
+
+Nome: The Last Of Us
+Categoria: Sobrevivência
+Descrição: Aventura épica com elementos de apocalipse e terror.
+public class Jogo {
+    private String nome;
+    private String categoria;
+    private String descricao;
+
+    public Jogo(String nome, String categoria, String descricao) {
+        this.nome = nome;
+        this.categoria = categoria;
+        this.descricao = descricao;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    @Override
+    public String toString() {
+        return nome + " - " + categoria;
+    }
+}
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class PainelJogos extends JPanel {
+
+    private JList<Jogo> listaJogos;
+    private DefaultListModel<Jogo> listaModelo;
+    private JTextArea descricaoArea;
+
+    public PainelJogos() {
+        setLayout(new BorderLayout());
+
+        // Criação da lista de jogos
+        listaModelo = new DefaultListModel<>();
+        listaJogos = new JList<>(listaModelo);
+        listaJogos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        // Adiciona a lista de jogos à JScrollPane para permitir rolagem
+        JScrollPane listaScroll = new JScrollPane(listaJogos);
+        listaScroll.setPreferredSize(new Dimension(250, 400));
+
+        // Criação da área de descrição
+        descricaoArea = new JTextArea();
+        descricaoArea.setEditable(false);
+        descricaoArea.setLineWrap(true);
+        descricaoArea.setWrapStyleWord(true);
+        JScrollPane descricaoScroll = new JScrollPane(descricaoArea);
+        descricaoScroll.setPreferredSize(new Dimension(400, 400));
+
+        // Adicionando componentes ao painel
+        JPanel painelLista = new JPanel(new BorderLayout());
+        painelLista.add(listaScroll, BorderLayout.CENTER);
+        painelLista.add(descricaoScroll, BorderLayout.EAST);
+
+        add(painelLista, BorderLayout.CENTER);
+
+        // Adicionar evento para exibir a descrição ao selecionar um item da lista
+        listaJogos.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                Jogo jogoSelecionado = listaJogos.getSelectedValue();
+                if (jogoSelecionado != null) {
+                    descricaoArea.setText(jogoSelecionado.getDescricao());
+                }
+            }
+        });
+
+        // Carregar a lista de jogos
+        carregarJogos();
+    }
+
+    private void carregarJogos() {
+        listaModelo.addElement(new Jogo("The Witcher 3", "RPG", "Aventura épica com elementos de fantasia."));
+        listaModelo.addElement(new Jogo("Minecraft", "Aventura", "Jogo de construção e exploração no estilo sandbox."));
+        listaModelo.addElement(new Jogo("FIFA 24", "Esporte", "Simulador de futebol altamente realista."));
+        listaModelo.addElement(new Jogo("Counter-Strike", "Tiro", "Jogo de tiro em primeira pessoa focado em equipes."));
+        listaModelo.addElement(new Jogo("The Sims 4", "Simulação", "Simulação de vida em um ambiente virtual."));
+        listaModelo.addElement(new Jogo("Valorant", "Tiro", "Jogo de tiro tático com heróis e habilidades especiais."));
+    }
+
+    public static void main(String[] args) {
+        // Criação da janela
+        JFrame frame = new JFrame("Lista de Jogos");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(700, 500);
+
+        // Adicionando o painel de jogos à janela
+        PainelJogos painel = new PainelJogos();
+        frame.add(painel);
+
+        // Tornar a janela visível
+        frame.setVisible(true);
+    }
+}
